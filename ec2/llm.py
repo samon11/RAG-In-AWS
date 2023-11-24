@@ -28,18 +28,3 @@ class RAGModel():
             response = self.model.generate(prompt=user, temp=temp, max_tokens=max_tokens, n_batch=n_batch)
         
         return response
-    
-    def enrich_samples(self, samples: list[str]):
-        results = []
-        for t in tqdm.tqdm(samples):
-            prompt = ENRICH_PROMPT.replace('$C', t)
-            with self.model.chat_session():
-                response = self.model.generate(prompt=prompt, temp=1.0, max_tokens=500)
-            
-            inst = response.splitlines()[0].replace('Instruction: ', '').strip()
-            ans = response.splitlines()[-1].replace('Response: ', '').replace('Answer: ', '').strip()
-            result = ORCA_OUT.replace('$C', t).replace('$Q', inst).replace('$A', ans)
-            print(result)
-            results.append(result)
-
-        return results
