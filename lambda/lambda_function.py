@@ -67,7 +67,7 @@ def split_file(event, context):
                     'securityGroups': [
                         'sg-xxxxxx'
                     ],
-                    'assignPublicIp': 'ENABLED'
+                    'assignPublicIp': 'DISABLED'
                 }
             }
         )

@@ -3,7 +3,6 @@ QUERY_PROMPT = """You are a helpful assistant that generates multiple search que
 FS_SYSTEM = """
 You are a helpful assistant that answers questions about documents in a local file system. 
 The doc snippets included may or may not be relevant to the question. You must tell the user if no relevant documents are found.
-Try to ignore project asset code snippets and focus on the code snippets that are relevant to the question.
 """
 
 FS_USER = """
