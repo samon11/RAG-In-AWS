@@ -2,6 +2,7 @@ from embedder import FlagEmbedding
 import boto3
 from model import insert_vector_batch
 import json
+import time
 
 def main():
     model = FlagEmbedding(base_path='/models/')
@@ -15,9 +16,18 @@ def main():
         messages = response.get('Messages', [])
         
         if len(messages) == 0:
-            print("No messages received, exiting")
-            break
-        
+            # ensure no messages are left in queue before exiting
+            queue_attributes = client.get_queue_attributes(QueueUrl=queue_url, AttributeNames=['ApproximateNumberOfMessages'])
+            n_messages = int(queue_attributes['Attributes']['ApproximateNumberOfMessages'])
+
+            if n_messages > 0:
+                print(f"Queue has {n_messages} messages, waiting for more")
+                time.sleep(1)
+                continue
+            else:
+                print("No messages received, exiting")
+                break
+
         msg_batch = [json.loads(m['Body']) for m in messages]
         chunks = [m['chunk'] for m in msg_batch]
         embeddings = model.embed(chunks, mode='key')
