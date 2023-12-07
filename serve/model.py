@@ -74,10 +74,10 @@ def insert_doc_vector(work_item, embedding):
 def insert_vector_batch(work_items, embeddings):
     models = [
         {
-            "document_id":work_item['documentId'], 
-            "text":work_item['chunk'][:2048], 
-            "embedding":embedding, 
-            "chunk_id":work_item['chunkId']
+            "document_id": work_item['documentId'], 
+            "text": work_item['chunk'][:2048], 
+            "embedding": embedding, 
+            "chunk_id": work_item['chunkId']
         }
         for work_item, embedding in zip(work_items, embeddings)]
 

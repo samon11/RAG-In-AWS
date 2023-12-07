@@ -36,14 +36,10 @@ def get_context(query, n=5):
     context = [{'doc': c[0].strip(), 'score': c[1]} for c in reranked[:n]]
     return context
 
-@app.route('/hc', methods=['GET'])
-def hc():
-    return jsonify({'status': 'ok'})
-
 @app.route('/api/search', methods=['POST'])
-def search(n=5):
+def search():
     data = request.get_json()
-    context = get_context(data['query'], n=n)
+    context = get_context(data['query'], n=5)
     if len(context) == 0:
         return jsonify({'error': 'No relevant docs found'}), 404
 
@@ -61,6 +57,10 @@ def ask():
     prompt = FS_USER.replace('$C', context_docs).replace('$Q', question)
     response = llm.ask(prompt, FS_SYSTEM, temp=data.get('temp', 0.5), max_tokens=data.get('max_tokens', 500))
     return jsonify({'response': response})
+
+@app.route('/hc', methods=['GET'])
+def hc():
+    return jsonify({'status': 'ok'})
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)
